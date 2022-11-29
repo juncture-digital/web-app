@@ -1,2 +1,1 @@
-# web-app
-Juncture Web Application
+# Visual Essays Web App
