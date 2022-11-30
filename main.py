@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 '''
-Flask app for Visual Essays site.
+Flask app for Juncture site.
 Dependencies: bs4 expiringdict Flask Flask-Cors html5lib PyYAML requests serverless_wsgi
 '''
 
@@ -39,13 +39,13 @@ except:
 CONFIG = yaml.load(open(f'{SCRIPT_DIR}/config.yaml', 'r').read(), Loader=yaml.FullLoader)
 
 API_ENDPOINT = 'https://api.juncture-digital.org'
-PREFIX = 'visual-essays/essays' # Prefix for site content, typically Github username/repo
+PREFIX = 'juncture-digital/essays' # Prefix for site content, typically Github username/repo
 REF = ''                         # Github ref (branch)
 LOCAL_CONTENT_ROOT = None
 
-# visual-essays web components version
-STABLE = '0.3'
-BETA = '0.4'
+# juncture-digital web components version
+STABLE = '0.1'
+BETA = '0.1'
 
 SEARCH_CACHE = ExpiringDict(max_len=1000, max_age_seconds=24 * 60 * 60)
 TOOL_CACHE = ExpiringDict(max_len=1000, max_age_seconds=24 * 60 * 60)
@@ -114,13 +114,13 @@ def _get_html(path, base_url, ref=REF, host=None, **kwargs):
   if status_code == 200:
     ve_wc_prefix = None
     if host == 'beta.juncture-digital.org':
-      ve_wc_prefix = f'https://unpkg.com/visual-essays@{BETA}/dist/visual-essays'
+      ve_wc_prefix = f'https://unpkg.com/juncture-digital@{BETA}/dist/juncture-digital'
     elif host == 'juncture-digital.org':
-      ve_wc_prefix = f'https://unpkg.com/visual-essays@{STABLE}/dist/visual-essays'
+      ve_wc_prefix = f'https://unpkg.com/juncture-digital@{STABLE}/dist/juncture-digital'
     elif 'api.juncture-digital.org' not in API_ENDPOINT:
       ve_wc_prefix = f'http://{host.split(":")[0]}:3333/build'
     if ve_wc_prefix:
-      html = html.replace('https://unpkg.com/visual-essays/dist/visual-essays', ve_wc_prefix)
+      html = html.replace('https://unpkg.com/juncture-digital/dist/juncture-digital', ve_wc_prefix)
   return status_code, html
 
 @app.route('/favicon.ico')
@@ -176,7 +176,7 @@ def render_app(path=None):
     if host == 'localhost':
       return open(f'{app.root_path}/../tools/{tool}.html', 'r').read()
     else:
-      resp = requests.get(f'https://raw.githubusercontent.com/visual-essays/tools/main/{tool}.html')
+      resp = requests.get(f'https://raw.githubusercontent.com/juncture-digital/tools/main/{tool}.html')
       if resp.status_code == 200:
         TOOL_CACHE[tool] = resp.text
       else: return '', resp.status_code

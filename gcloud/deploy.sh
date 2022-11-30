@@ -1,11 +1,11 @@
 #!/bin/bash
 
-GCP_PROJECT='visual-essays'
+GCP_PROJECT='juncture-digital'
 
 GCR_SERVICE=${1:-mdrender}
 MIN_INSTANCE_LIMIT=0
 
-gcloud config configurations activate visual-essays
+gcloud config configurations activate juncture-digital
 gcloud config set project ${GCP_PROJECT}
 gcloud config set compute/region us-central1
 gcloud config set run/region us-central1
