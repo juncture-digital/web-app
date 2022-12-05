@@ -113,10 +113,12 @@ def _get_html(path, base_url, ref=REF, host=None, **kwargs):
     status_code, html =  resp.status_code, resp.text if resp.status_code == 200 else ''
   if status_code == 200:
     ve_wc_prefix = None
-    if host == 'beta.juncture-digital.org':
-      ve_wc_prefix = f'https://unpkg.com/juncture-digital@{BETA}/dist/juncture-digital'
+    if host == 'dev.juncture-digital.org':
+      ve_wc_prefix = f'https://unpkg.com/juncture-digital@dev/dist/juncture-digital'
+    elif host == 'beta.juncture-digital.org':
+      ve_wc_prefix = f'https://unpkg.com/juncture-digital/dist/juncture-digital'
     elif host == 'juncture-digital.org':
-      ve_wc_prefix = f'https://unpkg.com/juncture-digital@{STABLE}/dist/juncture-digital'
+      ve_wc_prefix = f'https://unpkg.com/juncture-digital/dist/juncture-digital' # latest
     elif 'api.juncture-digital.org' not in API_ENDPOINT:
       ve_wc_prefix = f'http://{host.split(":")[0]}:3333/build'
     if ve_wc_prefix:

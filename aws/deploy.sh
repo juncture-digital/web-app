@@ -1,6 +1,6 @@
 #!/bin/bash
 
-FUNCTION_NAME=${1:-juncture-webapp}
+FUNCTION_NAME=${1:-juncture-webapp-dev}
 
 cd "$(dirname "$0")"
 
