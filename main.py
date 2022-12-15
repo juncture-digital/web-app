@@ -112,17 +112,9 @@ def _get_html(path, base_url, ref=REF, host=None, **kwargs):
     resp = requests.get(api_url)
     status_code, html =  resp.status_code, resp.text if resp.status_code == 200 else ''
   if status_code == 200:
-    ve_wc_prefix = None
-    if host == 'dev.juncture-digital.org':
-      ve_wc_prefix = f'https://unpkg.com/juncture-digital@dev/dist/juncture-digital'
-    elif host == 'beta.juncture-digital.org':
-      ve_wc_prefix = f'https://unpkg.com/juncture-digital/dist/juncture-digital'
-    elif host == 'juncture-digital.org':
-      ve_wc_prefix = f'https://unpkg.com/juncture-digital/dist/juncture-digital' # latest
-    elif 'api.juncture-digital.org' not in API_ENDPOINT:
-      ve_wc_prefix = f'http://{host.split(":")[0]}:3333/build'
-    if ve_wc_prefix:
-      html = html.replace('https://unpkg.com/juncture-digital/dist/juncture-digital', ve_wc_prefix)
+    if 'api.juncture-digital.org' not in API_ENDPOINT: # Local dev
+      html = html.replace('https://unpkg.com/juncture-digital/dist/juncture-digital', f'http://{host.split(":")[0]}:3333/build')
+      html = html.replace('https://unpkg.com/juncture-digital-vue3/dist/assets/js', f'http://{host.split(":")[0]}:5173/src/main.ts')
   return status_code, html
 
 @app.route('/favicon.ico')
