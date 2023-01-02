@@ -112,9 +112,10 @@ def _get_html(path, base_url, ref=REF, host=None, **kwargs):
     resp = requests.get(api_url)
     status_code, html =  resp.status_code, resp.text if resp.status_code == 200 else ''
   if status_code == 200:
-    if 'api.juncture-digital.org' not in API_ENDPOINT: # Local dev
-      html = html.replace('https://unpkg.com/juncture-digital/dist/juncture-digital', f'http://{host.split(":")[0]}:3333/build')
-      html = html.replace('https://unpkg.com/juncture-digital-vue3/dist/assets/js', f'http://{host.split(":")[0]}:5173/src/main.ts')
+    if host == 'localhost:8080':
+      html = html.replace('https://unpkg.com/juncture-digital/dist/juncture-digital/juncture-digital.esm.js', f'http://{host.split(":")[0]}:5173/src/main.ts')
+    elif host == 'dev.juncture-digital.org':
+      html = html.replace('https://unpkg.com/juncture-digital/dist/juncture-digital/juncture-digital.esm.js', f'https://unpkg.com/juncture-digital-vue3/dist/assets/js')
   return status_code, html
 
 @app.route('/favicon.ico')
@@ -168,7 +169,11 @@ def render_app(path=None):
   logger.info(f'host={host} tool={tool} path={path} refresh={refresh}')
   if tool not in TOOL_CACHE or refresh:
     if host == 'localhost':
-      return open(f'{app.root_path}/../tools/{tool}.html', 'r').read()
+      html = open(f'{app.root_path}/../tools/{tool}.html', 'r').read()
+      html = html.replace('https://api.juncture-digital.org', 'http://localhost:8000')
+      html = html.replace('https://unpkg.com/juncture-digital-vue3/dist/assets/js', 'http://localhost:5173/src/main.ts')
+      html = html.replace('https://iiif.juncture-digital.org', 'http://localhost:8088')
+      return html
     else:
       resp = requests.get(f'https://raw.githubusercontent.com/juncture-digital/tools/main/{tool}.html')
       if resp.status_code == 200:
